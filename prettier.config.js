@@ -6,6 +6,7 @@ const config = {
     semi: true,
     bracketSpacing: true,
     arrowParens: "always",
+    printWidth: 120,
 };
 
 export default config;
