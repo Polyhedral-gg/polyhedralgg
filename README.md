@@ -12,6 +12,7 @@ Polyhedral.gg is a site and Discord integration to make playing TTRPGs online ea
 </div>
 
 ## Deployment
+
 This repo is deployed as a Docker container running under Portainer and served with Traefik.
 
 [polyhedral]: https://polyhedral.gg
