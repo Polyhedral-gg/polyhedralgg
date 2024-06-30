@@ -2,10 +2,9 @@ name: deploy
 
 on:
   push:
-    branches:
-      - main
     tags:
-      - 'v*'
+      - 'v1.*'
+      - 'v0.*'
 
 jobs:
   build:
