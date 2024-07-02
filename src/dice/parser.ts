@@ -36,43 +36,58 @@ interface Res {
 }
 
 const sem = diceGrammar.createSemantics();
-sem.addOperation("diceOp", {
+
+// Many cursed type assertions incoming because Ohm's api is JS and ESLint doesn't like that
+sem.addOperation<Res>("eval", {
     number(_): Res {
         return { val: parseInt(this.sourceString), msg: this.sourceString };
     },
-    diceResult(a, _, b): Res {
-        return { val: 1, msg: `${a.diceOp().msg}d${b.diceOp().msg}` };
+    diceResult(a: unknown, _, b: unknown): Res {
+        const numDice = (a as { eval(): Res }).eval();
+        const numSides = (b as { eval(): Res }).eval();
+        return { val: 1, msg: `${numDice.msg}d${numSides.msg}` };
     },
-    AddExp_plus(a, _, b): Res {
-        return { val: a.diceOp().val + b.diceOp().val, msg: `${a.diceOp().msg} + ${b.diceOp().msg}` };
+    AddExp_plus(a: unknown, _, b: unknown): Res {
+        const left = (a as { eval(): Res }).eval();
+        const right = (b as { eval(): Res }).eval();
+        return { val: left.val + right.val, msg: `${left.msg}+${right.msg}` };
     },
-    AddExp_minus(a, _, b): Res {
-        return { val: a.diceOp().val - b.diceOp().val, msg: `${a.diceOp().msg} - ${b.diceOp().msg}` };
+    AddExp_minus(a: unknown, _, b: unknown): Res {
+        const left = (a as { eval(): Res }).eval();
+        const right = (b as { eval(): Res }).eval();
+        return { val: left.val - right.val, msg: `${left.msg}-${right.msg}` };
     },
-    MulExp_times(a, _, b): Res {
-        return { val: a.diceOp().val * b.diceOp().val, msg: `${a.diceOp().msg} * ${b.diceOp().msg}` };
+    MulExp_times(a: unknown, _, b: unknown): Res {
+        const left = (a as { eval(): Res }).eval();
+        const right = (b as { eval(): Res }).eval();
+        return { val: left.val * right.val, msg: `${left.msg}*${right.msg}` };
     },
-    MulExp_divide(a, _, b): Res {
-        return { val: a.diceOp().val * b.diceOp().val, msg: `${a.diceOp().msg} * ${b.diceOp().msg}` };
+    MulExp_divide(a: unknown, _, b: unknown): Res {
+        const dividend = (a as { eval(): Res }).eval();
+        const divisor = (b as { eval(): Res }).eval();
+        return { val: dividend.val / divisor.val, msg: `${dividend.msg}÷${divisor.msg}` };
     },
-    ExpExp_power(a, _, b): Res {
-        return { val: a.diceOp().val ** b.diceOp().val, msg: `${a.diceOp().msg} ^ ${b.diceOp().msg}` };
+    ExpExp_power(a: unknown, _, b: unknown): Res {
+        const base = (a as { eval(): Res }).eval();
+        const exp = (b as { eval(): Res }).eval();
+        return { val: base.val ** exp.val, msg: `${base.msg}^${exp.msg}` };
     },
-    PriExp_paren(_, a, __): Res {
-        return { val: a.diceOp().val, msg: ` ( ${a.diceOp().msg} ) ` };
+    PriExp_paren(_, a: unknown, __): Res {
+        const res = (a as { eval(): Res }).eval();
+        return { val: res.val, msg: `(${res.msg})` };
     },
-    PriExp_pos(_, a): Res {
-        return { val: Math.abs(a.diceOp().val), msg: ` abs(${a.diceOp().msg}) ` };
+    PriExp_pos(_, a: unknown): Res {
+        const res = (a as { eval(): Res }).eval();
+        return { val: Math.abs(res.val), msg: `abs(${res.msg})` };
     },
-    PriExp_neg(_, a): Res {
-        return { val: -a.diceOp().val, msg: ` -(${a.diceOp().msg}) ` };
+    PriExp_neg(_, a: unknown): Res {
+        const res = (a as { eval(): Res }).eval();
+        return { val: -res.val, msg: `-(${res.msg})` };
     },
 });
 
-// console.log(diceGrammar);
-const matchResult = diceGrammar.match("1 + 2 + 4d3 / 3d1 ^ 3");
-// console.log(matchResult.succeeded());
+const matchResult = diceGrammar.match("1 + 2 + ((4d3 / 3d1) ^ 3) - 4 * -3 / 2");
 const adapter = sem(matchResult);
-const res = adapter.diceOp();
+const res: Res = (adapter.eval as () => Res)();
 console.log(res.msg);
 console.log(res.val);
