@@ -6,8 +6,8 @@ const ROLL_COMMAND = {
     type: ApplicationCommandType.ChatInput,
     options: [
         {
-            name: "dicestring",
-            description: "A string in Dice Notation to roll",
+            name: "notation",
+            description: "Whatcha wanna roll?",
             required: true,
             type: ApplicationCommandOptionType.String,
         },
