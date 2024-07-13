@@ -1,14 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import {
-    index,
-    integer,
-    pgTableCreator,
-    primaryKey,
-    serial,
-    text,
-    timestamp,
-    varchar,
-} from "drizzle-orm/pg-core";
+import { index, integer, pgTableCreator, primaryKey, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
 /**
@@ -43,9 +34,7 @@ export const accounts = createTable(
         userId: varchar("userId", { length: 255 })
             .notNull()
             .references(() => users.id),
-        type: varchar("type", { length: 255 })
-            .$type<AdapterAccount["type"]>()
-            .notNull(),
+        type: varchar("type", { length: 255 }).$type<AdapterAccount["type"]>().notNull(),
         provider: varchar("provider", { length: 255 }).notNull(),
         providerAccountId: varchar("providerAccountId", {
             length: 255,
@@ -73,9 +62,7 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 export const sessions = createTable(
     "session",
     {
-        sessionToken: varchar("sessionToken", { length: 255 })
-            .notNull()
-            .primaryKey(),
+        sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
         userId: varchar("userId", { length: 255 })
             .notNull()
             .references(() => users.id),
