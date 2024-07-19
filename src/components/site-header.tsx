@@ -14,6 +14,11 @@ export function SiteHeader() {
                 <MainNav />
                 <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
                     <nav className="flex items-center">
+                        <div className="px-4 underline">
+                            <Link href="https://discord.com/oauth2/authorize?client_id=1248697940122402868">
+                                Add to Discord!
+                            </Link>
+                        </div>
                         <Link href="https://github.com/Polyhedral-gg">
                             <div className={cn(buttonVariants({ variant: "ghost" }), "h-8 w-8 px-0")}>
                                 <GitHubLogoIcon className="h-5 w-5" />
