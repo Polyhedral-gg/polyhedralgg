@@ -6,6 +6,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { SiteHeader } from "~/components/site-header";
 import { type Viewport, type Metadata } from "next";
 import { ThemeProvider } from "~/components/theme-provider";
+import { SiteFooter } from "~/components/site-footer";
 
 export const metadata: Metadata = {
     title: "Polyhedral.gg",
@@ -37,7 +38,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
                     <div className="flex min-h-screen flex-col">
                         <SiteHeader />
-                        <TRPCReactProvider>{children}</TRPCReactProvider>
+                        <TRPCReactProvider>
+                            <main className="flex grow flex-col items-center justify-center bg-gradient-to-b from-[#0066cc] to-[#15162c]">
+                                {children}
+                            </main>
+                        </TRPCReactProvider>
+                        <SiteFooter />
                     </div>
                 </ThemeProvider>
             </body>
