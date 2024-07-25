@@ -5,6 +5,8 @@ function getRand(min: number, max: number): number {
 }
 
 function rollDice(numDice: number, numSides: number): number[] {
+    if (numDice > 99) throw Error("Can't roll more than 99 dice in a single dice group!");
+
     const results: number[] = new Array<number>(numDice).fill(0);
 
     return results.map(() => {
@@ -19,7 +21,7 @@ function processBasicDiceNotation(numDice: number, numSides: number): DiceParseR
         val: results.reduce((accumulator, currentValue) => {
             return accumulator + currentValue;
         }, 0),
-        msg: `${numDice}d${numSides}(${results.join(", ")})`,
+        msg: `${numDice}d${numSides} (${results.join(", ")})`,
     };
 }
 
