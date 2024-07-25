@@ -17,4 +17,3 @@ This repo is deployed as a Docker container running under Portainer and served w
 
 [polyhedral]: https://polyhedral.gg
 [polyhedral-discord]: https://discord.gg/3HNFghAfCU
-[create-t3-app]: https://create.t3.gg/
