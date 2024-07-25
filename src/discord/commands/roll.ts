@@ -19,23 +19,37 @@ export default function roll(interaction: APIChatInputApplicationCommandInteract
     }
 
     let msg = "";
+    let didError = false;
     try {
         const notation = interaction.data.options[0] as APIApplicationCommandInteractionDataStringOption;
         const DiceRes: DiceParseResult = parse(notation.value);
 
         msg = `${DiceRes.msg} = **${DiceRes.val}**`;
     } catch (error) {
+        didError = true;
         if (error instanceof Error) {
-            msg = error.message;
+            msg = "Error: " + error.message;
         } else {
             msg = "An error occured while parsing the command";
         }
     }
 
+    if (msg.length >= 2000) {
+        msg = "Error: Response was longer than discord's max message length";
+        didError = true;
+    }
+
+    let msgFlags = 0;
+    if (didError) msgFlags |= MessageFlags.Ephemeral;
+
     return NextResponse.json({
         type: InteractionResponseType.ChannelMessageWithSource,
         data: {
             content: msg,
+            flags: msgFlags,
+            allowedMentions: {
+                parse: [],
+            },
         },
     });
 }
